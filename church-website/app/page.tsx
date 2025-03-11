@@ -18,15 +18,15 @@ export default function Home() {
   }
 
   const navItems = [
-    { en: "About", zh: "关于我们" },
-    { en: "Mission", zh: "使命" },
-    { en: "Groups", zh: "小组" },
-    { en: "Connect", zh: "联系" },
-    { en: "History", zh: "历史" },
-    { en: "Watch Live", zh: "在线观看" },
-    { en: "Bible Study", zh: "查经" },
-    { en: "Give", zh: "奉献" },
-    { en: "Youth", zh: "青年" },
+    { en: "ABOUT", zh: "关于我们" },
+    { en: "MISSION", zh: "使命" },
+    { en: "GROUPS", zh: "小组" },
+    { en: "CONNECT", zh: "联系" },
+    { en: "HISTORY", zh: "历史" },
+    { en: "WATCH LIVE", zh: "在线观看" },
+    { en: "BIBLE STUDY", zh: "查经" },
+    { en: "GIVE", zh: "奉献" },
+    { en: "YOUTH", zh: "青年" },
   ]
 
   return (
@@ -103,19 +103,19 @@ export default function Home() {
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
             <div className="text-center text-white">
               <h1 className="font-bold text-4xl md:text-6xl mb-4 tracking-tight">
-                {language === "en" ? "San Jose Christian Assembly" : "圣何塞基督教会"}
+                {language === "en" ? "SAN JOSE CHRISTIAN ASSEMBLY" : "圣何塞基督教会"}
               </h1>
               <p className="text-xl md:text-2xl max-w-2xl mx-auto">
-                {language === "en" ? "Growing together in faith, hope, and love" : "在信心、盼望和爱中一起成长"}
+                {language === "en" ? "GROWING TOGETHER IN FAITH, HOPE, AND LOVE" : "在信心、盼望和爱中一起成长"}
               </p>
               <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link href="https://www.youtube.com/@SanJoseChristianAssembly/streams" target="_blank" rel="noopener noreferrer">
                   <Button size="lg" className="rounded-none">
-                    {language === "en" ? "Watch Live" : "在线观看"}
+                    {language === "en" ? "WATCH LIVE" : "在线观看"}
                   </Button>
                 </Link>
                 <Button size="lg" variant="outline" className="rounded-none border-2 bg-transparent">
-                  {language === "en" ? "Join Us" : "加入我们"}
+                  {language === "en" ? "JOIN US" : "加入我们"}
                 </Button>
               </div>
             </div>
@@ -126,13 +126,13 @@ export default function Home() {
         <section className="py-16 flex bg-secondary items-center justify-center">
           <div className="container flex flex-col items-center justify-center">
             <div className="text-xl font-bold mb-4">
-              {language === "en" ? "Sundays at 9:30AM" : "欢欢欢欢欢欢欢欢"}
+              {language === "en" ? "SUNDAYS AT 9:30 AM" : "欢欢欢欢欢欢欢欢"}
             </div>
-            <div className="text-xl font-light mb-4">
-              {language === "en" ? "215 Topaz St, Milpitas, CA 95035" : "欢欢欢欢欢欢欢"}
+            <div className="text-xl font-bold mb-4">
+              {language === "en" ? "215 TOPAZ ST, MILPITAS, CA 95035" : "欢欢欢欢欢欢欢"}
             </div>
             <Link href="https://www.youtube.com/@SanJoseChristianAssembly/streams" target="_blank" rel="noopener noreferrer">
-              <div className="text-xl font-semibold underline mb-4">
+              <div className="text-xl font-semibold underline mb-4 text-tertiary">
                 {language === "en" ? "Watch Live Here" : "欢欢欢欢欢欢欢"}
               </div>
             </Link>
@@ -140,28 +140,60 @@ export default function Home() {
               {language === "en" ? "\"For God so loved the world that He gave His only begotten Son, that whoever believes in Him should not perish but have everlasting life.\"\nJohn 3:16" : "加入我们，一起崇拜、学习、团契。"}
             </div>
           </div>
+          
         </section>
 
-        {/* Pastoral staff section */}
-        <section className="py-16 flex bg-secondary items-center justify-center">
-          <div className="container flex flex-col items-center justify-center">
-            <div className="text-4xl font-bold mb-4 pb-4">  
-              {language === "en" ? "Our Pastoral Staff" : "欢欢欢欢欢欢欢"}
+        {/* New Buttons Section */}
+        <div className="flex justify-center space-x-8">
+          <Link href="/connect">
+            <Button className="rounded-none">{language === "en" ? "Get Connected" : "欢欢欢欢欢欢欢"}</Button>
+          </Link>
+          <Link href="/upcoming-events">
+            <Button className="rounded-none">{language === "en" ? "Upcoming Events" : "欢欢欢欢欢欢欢"}</Button>
+          </Link>
+        </div>
+
+        {/* Pastor Section */}
+        <section className="py-20 bg-secondary">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-4xl font-bold mb-8 text-center">
+                {language === "en" ? "MEET OUR PASTOR" : "欢欢欢欢欢欢欢"}
+              </h2>
+
+              <div className="grid md:grid-cols-2 gap-8 items-center">
+                <div className="overflow-hidden">
+                  <div className="aspect-square relative">
+                    <img
+                      src="/pastor.jpg?height=400&width=400"
+                      alt={language === "en" ? "Pastor John Smith" : "欢欢欢欢欢欢欢"}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-2xl font-bold mb-2">
+                    {language === "en" ? "Pastor Merry Jeng" : "欢欢欢欢欢欢欢"}
+                  </h3>
+                  <p className="text-muted-foreground italic mb-4">
+                    {language === "en" ? "Senior Pastor" : "欢欢欢欢欢欢欢"}
+                  </p>
+                  <p className="mb-4">
+                    {language === "en"
+                      ? "Pastor Merry has been serving our congregation for over 15 years. Her passion is to help people grow in their relationship with Jesus Christ and find their purpose in God's plan."
+                      : "欢欢欢欢欢欢"}
+                  </p>
+                  <p>
+                    {language === "en"
+                      ? "We invite you to join us this Sunday to experience God's love and the warmth of our community."
+                      : "欢欢欢欢欢欢欢"}
+                  </p>
+                </div>
+              </div>
             </div>
-            <img src="/pastor.jpg" className="w-1/2 h-1/2"/>
           </div>
         </section>
-
-        {/* About us section */}
-        <section className="py-16 flex bg-secondary items-center justify-center">
-          <div className="container flex flex-col mx-auto items-center justify-center">
-            <div className="text-5xl font-bold mb-4 pb-4">
-              {language === "en" ? "About Us" : "欢欢欢欢欢欢欢"}
-            </div>
-          </div>
-        </section>
-
-
       </main>
       
         <section className="py-16 bg-secondary">

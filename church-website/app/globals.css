@@ -18,6 +18,8 @@
     --muted-foreground: 0 0% 45%;
     --accent: 0 0% 96%;
     --accent-foreground: 0 0% 0%;
+    --tertiary: 0 0% 10%;
+    --tertiary-foreground: 0 0% 100%;
     --destructive: 0 0% 0%;
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 89%;
