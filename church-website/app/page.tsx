@@ -3,15 +3,17 @@
 import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Youtube, Menu, X } from "lucide-react"
+import { Menu, X, Users, BookOpen, Heart } from "lucide-react"
 import LanguageToggle from "@/components/language-toggle"
 import VideoBackground from "@/components/video-background"
 import DailyDevotional from "@/components/daily-devotional"
 import EventsCalendar from "@/components/events-calendar"
+import { motion } from "framer-motion"
 
 export default function Home() {
   const [language, setLanguage] = useState<"en" | "zh">("en")
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [showBanner, setShowBanner] = useState(true)
 
   const toggleLanguage = () => {
     setLanguage(language === "en" ? "zh" : "en")
@@ -28,6 +30,11 @@ export default function Home() {
     { en: "GIVE", zh: "奉献" },
     { en: "YOUTH", zh: "青年" },
   ]
+
+  const fadeInVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  }
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -57,6 +64,20 @@ export default function Home() {
             </Button>
           </div>
         </div>
+        {showBanner && (
+          <>
+            <div className="border-b border-black" />
+            <div className="bg-gray-200 py-2 relative">
+              <p className="text-sm font-medium text-center">Today's Daily Bread: 1 Peter 2:11-25</p>
+              <button 
+                className="absolute right-4 top-1/2 -translate-y-1/2"
+                onClick={() => setShowBanner(false)}
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          </>
+        )}
 
         {/* Mobile menu */}
         {mobileMenuOpen && (
@@ -122,46 +143,134 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Info section */}
-        <section className="py-16 flex bg-secondary items-center justify-center">
-          <div className="container flex flex-col items-center justify-center">
-            <div className="text-xl font-bold mb-4">
-              {language === "en" ? "SUNDAYS AT 9:30 AM" : "欢欢欢欢欢欢欢欢"}
-            </div>
-            <div className="text-xl font-bold mb-4">
-              {language === "en" ? "215 TOPAZ ST, MILPITAS, CA 95035" : "欢欢欢欢欢欢欢"}
-            </div>
-            <Link href="https://www.youtube.com/@SanJoseChristianAssembly/streams" target="_blank" rel="noopener noreferrer">
-              <div className="text-xl font-semibold underline mb-4 text-tertiary">
-                {language === "en" ? "Watch Live Here" : "欢欢欢欢欢欢欢"}
-              </div>
-            </Link>
-            <div className="text-xl font-light italic mb-4 w-1/2 text-center">
-              {language === "en" ? "\"For God so loved the world that He gave His only begotten Son, that whoever believes in Him should not perish but have everlasting life.\"\nJohn 3:16" : "加入我们，一起崇拜、学习、团契。"}
-            </div>
-          </div>
-          
+        {/* Welcome section */}
+        <section className="py-16 bg-white">
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeInVariants}
+            transition={{ duration: 0.6 }}
+            className="container mx-auto px-4"
+          >
+            <motion.div 
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeInVariants}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="max-w-5xl mx-auto text-center"
+            >
+              <h1 className="font-bold text-4xl md:text-6xl mb-4 tracking-tight">
+                {language === "en" ? "WELCOME TO YOUR NEW FAMILY IN CHRIST" : "我们的使命"}
+              </h1>
+            </motion.div>
+          </motion.div>
         </section>
 
-        {/* New Buttons Section */}
-        <div className="flex justify-center space-x-8">
-          <Link href="/connect">
-            <Button className="rounded-none">{language === "en" ? "Get Connected" : "欢欢欢欢欢欢欢"}</Button>
-          </Link>
-          <Link href="/upcoming-events">
-            <Button className="rounded-none">{language === "en" ? "Upcoming Events" : "欢欢欢欢欢欢欢"}</Button>
-          </Link>
-        </div>
+        {/* Info section */}
+        <section className="bg-white">
+          <div className="container mx-auto px-4">
+            <motion.div 
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeInVariants}
+              transition={{ duration: 0.6 }}
+              className="max-w-3xl mx-auto text-center"
+            >
+              <motion.h2 
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeInVariants}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="text-2xl font-bold mb-4"
+              >
+                {language === "en" ? "JOIN US FOR WORSHIP" : "加入我们的敬拜"}
+              </motion.h2>
+              
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeInVariants}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
+                <p className="text-lg font-bold mb-2">{language === "en" ? "SUNDAYS AT 9:30AM" : "周日上午9:30"}</p>
+                <p className="mb-6">215 TOPAZ ST, MILPITAS, CA 95035</p>
+              </motion.div>
+
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeInVariants}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="max-w-2xl py-10 mx-auto mb-12"
+              >
+                <p className="text-lg italic mb-4">
+                  {language === "en"
+                    ? "For God so loved the world that He gave His only begotten Son, that whoever believes in Him should not perish but have everlasting life."
+                    : "神爱世人，甚至将他的独生子赐给他们，叫一切信他的，不致灭亡，反得永生。"}
+                </p>
+                <p className="font-bold">{language === "en" ? "John 3:16" : "约翰福音 3:16"}</p>
+              </motion.div>
+
+              {/* Buttons */}
+              <motion.div 
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeInVariants}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-24 mt-12"
+              >
+                <Link href="/connect">
+                  <Button className="rounded-none min-w-[200px]">
+                    {language === "en" ? "Get Connected" : "欢欢欢欢欢欢欢"}
+                  </Button>
+                </Link>
+                <Link href="/events">
+                  <Button className="rounded-none min-w-[200px]">
+                    {language === "en" ? "Upcoming Events" : "欢欢欢欢欢欢欢"}
+                  </Button>
+                </Link>
+              </motion.div>
+            </motion.div>
+          </div>
+        </section>
 
         {/* Pastor Section */}
         <section className="py-20 bg-secondary">
           <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-4xl font-bold mb-8 text-center">
+            <motion.div 
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeInVariants}
+              transition={{ duration: 0.6 }}
+              className="max-w-4xl mx-auto"
+            >
+              <motion.h2 
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeInVariants}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="text-4xl font-bold mb-8 text-center"
+              >
                 {language === "en" ? "MEET OUR PASTOR" : "欢欢欢欢欢欢欢"}
-              </h2>
+              </motion.h2>
 
-              <div className="grid md:grid-cols-2 gap-8 items-center">
+              <motion.div 
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeInVariants}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="grid md:grid-cols-2 gap-8 items-center"
+              >
                 <div className="overflow-hidden">
                   <div className="aspect-square relative">
                     <img
@@ -190,10 +299,167 @@ export default function Home() {
                       : "欢欢欢欢欢欢欢"}
                   </p>
                 </div>
-              </div>
+              </motion.div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Ministry Gallery Section */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <motion.h2 
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeInVariants}
+              transition={{ duration: 0.6 }}
+              className="text-3xl font-bold mb-12 text-center"
+            >
+              {language === "en" ? "GET INVOLVED" : "我们的事工"}
+            </motion.h2>
+
+            <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16">
+              {/* Groups */}
+              <motion.div 
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeInVariants}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="text-center"
+              >
+                <Link href="/groups" className="group block">
+                  <div className="overflow-hidden relative mb-6">
+                    <div className="aspect-square">
+                      <img
+                        src="/pexels-eberhardgross-691668.jpg?height=400&width=400"
+                        alt={language === "en" ? "SMALL GROUPS" : "小组"}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <Users className="h-16 w-16 text-white" />
+                    </div>
+                  </div>
+                </Link>
+                <h3 className="text-2xl font-bold mb-3">{language === "en" ? "SMALL GROUPS" : "小组"}</h3>
+                <p className="text-muted-foreground max-w-md mx-auto">
+                  {language === "en"
+                    ? "Connect with others in our community through small groups where we study, pray, and grow together."
+                    : "通过小组与我们社区中的其他人联系，我们一起学习、祈祷和成长。"}
+                </p>
+              </motion.div>
+
+              {/* Bible Study */}
+              <motion.div 
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeInVariants}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="text-center"
+              >
+                <Link href="/bible-study" className="group block">
+                  <div className="overflow-hidden relative mb-6">
+                    <div className="aspect-square">
+                      <img
+                        src="/pexels-lum3n-44775-167699.jpg?height=400&width=400"
+                        alt={language === "en" ? "BIBLE STUDY" : "查经"}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <BookOpen className="h-16 w-16 text-white" />
+                    </div>
+                  </div>
+                </Link>
+                <h3 className="text-2xl font-bold mb-3">{language === "en" ? "BIBLE STUDY" : "查经"}</h3>
+                <p className="text-muted-foreground max-w-md mx-auto">
+                  {language === "en"
+                    ? "Deepen your understanding of God's Word through our weekly Bible studies and theological discussions."
+                    : "通过我们每周的查经和神学讨论，加深您对上帝话语的理解。"}
+                </p>
+              </motion.div>
+
+              {/* Youth */}
+              <motion.div 
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeInVariants}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                className="text-center"
+              >
+                <Link href="/youth" className="group block">
+                  <div className="overflow-hidden relative mb-6">
+                    <div className="aspect-square">
+                      <img
+                        src="/pexels-markusspiske-113338.jpg?height=400&width=400"
+                        alt={language === "en" ? "YOUTH" : "青年"}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="h-16 w-16 text-white"
+                      >
+                        <path d="M8 7a4 4 0 1 0 8 0 4 4 0 0 0-8 0" />
+                        <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />
+                      </svg>
+                    </div>
+                  </div>
+                </Link>
+                <h3 className="text-2xl font-bold mb-3">{language === "en" ? "YOUTH" : "青年"}</h3>
+                <p className="text-muted-foreground max-w-md mx-auto">
+                  {language === "en"
+                    ? "Our youth ministry provides a safe and fun environment for teenagers to build friendships and grow in their faith."
+                    : "我们的青年事工为青少年提供了一个安全、有趣的环境，让他们建立友谊并在信仰中成长。"}
+                </p>
+              </motion.div>
+
+              {/* Mission */}
+              <motion.div 
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeInVariants}
+                transition={{ duration: 0.6, delay: 0.8 }}
+                className="text-center"
+              >
+                <Link href="/mission" className="group block">
+                  <div className="overflow-hidden relative mb-6">
+                    <div className="aspect-square">
+                      <img
+                        src="/pexels-sebastian-189349.jpg?height=400&width=400"
+                        alt={language === "en" ? "MISSION" : "使命"}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <Heart className="h-16 w-16 text-white" />
+                    </div>
+                  </div>
+                </Link>
+                <h3 className="text-2xl font-bold mb-3">{language === "en" ? "MISSION" : "使命"}</h3>
+                <p className="text-muted-foreground max-w-md mx-auto">
+                  {language === "en"
+                    ? "We are committed to serving our local community and supporting global missions to share God's love with the world."
+                    : "我们致力于服务我们的本地社区，并支持全球使命，与世界分享上帝的爱。"}
+                </p>
+              </motion.div>
             </div>
           </div>
         </section>
+
       </main>
       
         <section className="py-16 bg-secondary">
@@ -205,17 +471,17 @@ export default function Home() {
               {/* Events calendar */}
               <EventsCalendar language={language} />
 
-              {/* Connect card */}
+              {/* Bible Study card */}
               <div className="bg-white border-2 border-black p-6 flex flex-col h-full">
-                <h2 className="font-bold text-xl mb-4">{language === "en" ? "Connect With Us" : "与我们联系"}</h2>
+                <h2 className="font-bold text-xl mb-4">{language === "en" ? "Bible Study" : "查经"}</h2>
                 <p className="text-muted-foreground mb-6">
                   {language === "en"
-                    ? "Join our community and stay updated with our latest events and announcements."
-                    : "加入我们的社区，了解我们最新的活动和公告。"}
+                    ? "Join us this Friday night at 7:30 PM for a Bible study on 1 Timothy 6:3-21. This week we will be discussing the importance of contentment and how it relates to our faith."
+                    : "本周学习的经文：提摩太前书 6:3-21。加入我们，一起探讨这段经文的教导和见解。"}
                 </p>
                 <div className="mt-auto">
-                  <Link href="/connect">
-                    <Button className="w-full rounded-none">{language === "en" ? "Get Connected" : "保持联系"}</Button>
+                  <Link href="/bible-study">
+                    <Button className="w-full rounded-none">{language === "en" ? "Join Bible Study" : "参加查经"}</Button>
                   </Link>
                 </div>
               </div>
@@ -244,7 +510,7 @@ export default function Home() {
                 {language === "en" ? "Sunday: 9:30 AM" : "周日：上午9:30"}
               </p>
               <p className="text-gray-400">
-                {language === "en" ? "Friday Bible Study: 8:00 PM" : "8:00"}
+                {language === "en" ? "Friday Bible Study: 7:30 PM" : "7:30"}
               </p>
             </div>
 

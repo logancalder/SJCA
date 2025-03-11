@@ -30,7 +30,7 @@ export default function DailyDevotional({ language }: DailyDevotionalProps) {
       <div className="pb-2">
         <div className="flex items-center gap-2 font-bold text-xl">
           <Book className="h-5 w-5" />
-          {language === "en" ? "Daily Devotional" : "每日灵修"}
+          {language === "en" ? "Daily Bread" : "每日灵修"}
         </div>
         <div className="text-muted-foreground text-sm">
           {language === "en" ? "Today's verse and reflection" : "今日经文与反思"}
