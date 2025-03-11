@@ -121,15 +121,49 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* Info section */}
         <section className="py-16 flex bg-secondary items-center justify-center">
           <div className="container flex flex-col items-center justify-center">
-            <h1 className="text-4xl font-bold mb-4">
-              {language === "en" ? "Sundays at 9:30AM" : "欢迎来到圣何塞基督教会"}
-            </h1>
-            <div className="text-center">dasd</div>
+            <div className="text-xl font-bold mb-4">
+              {language === "en" ? "Sundays at 9:30AM" : "欢欢欢欢欢欢欢欢"}
+            </div>
+            <div className="text-xl font-light mb-4">
+              {language === "en" ? "215 Topaz St, Milpitas, CA 95035" : "欢欢欢欢欢欢欢"}
+            </div>
+            <Link href="https://www.youtube.com/@SanJoseChristianAssembly/streams" target="_blank" rel="noopener noreferrer">
+              <div className="text-xl font-semibold underline mb-4">
+                {language === "en" ? "Watch Live Here" : "欢欢欢欢欢欢欢"}
+              </div>
+            </Link>
+            <div className="text-xl font-light italic mb-4 w-1/2 text-center">
+              {language === "en" ? "\"For God so loved the world that He gave His only begotten Son, that whoever believes in Him should not perish but have everlasting life.\"\nJohn 3:16" : "加入我们，一起崇拜、学习、团契。"}
+            </div>
           </div>
         </section>
-        {/* Quick access section */}
+
+        {/* Pastoral staff section */}
+        <section className="py-16 flex bg-secondary items-center justify-center">
+          <div className="container flex flex-col items-center justify-center">
+            <div className="text-4xl font-bold mb-4 pb-4">  
+              {language === "en" ? "Our Pastoral Staff" : "欢欢欢欢欢欢欢"}
+            </div>
+            <img src="/pastor.jpg" className="w-1/2 h-1/2"/>
+          </div>
+        </section>
+
+        {/* About us section */}
+        <section className="py-16 flex bg-secondary items-center justify-center">
+          <div className="container flex flex-col mx-auto items-center justify-center">
+            <div className="text-5xl font-bold mb-4 pb-4">
+              {language === "en" ? "About Us" : "欢欢欢欢欢欢欢"}
+            </div>
+          </div>
+        </section>
+
+
+      </main>
+      
         <section className="py-16 bg-secondary">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -156,7 +190,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-      </main>
+
 
       <footer className="bg-black text-white py-12">
         <div className="container mx-auto px-4">
