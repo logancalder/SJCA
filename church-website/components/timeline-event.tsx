@@ -82,7 +82,6 @@ export default function TimelineEvent({ year, title, description, image, isLeft,
             alt={title}
             fill
             className="object-cover"
-            style={{ filter: "grayscale(100%)" }}
           />
         </div>
       </div>

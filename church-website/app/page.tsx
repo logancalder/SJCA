@@ -9,6 +9,7 @@ import VideoBackground from "@/components/video-background"
 import DailyDevotional from "@/components/daily-devotional"
 import EventsCalendar from "@/components/events-calendar"
 import { motion } from "framer-motion"
+import MainNav from "@/app/components/main-nav"
 
 export default function Home() {
   const [language, setLanguage] = useState<"en" | "zh">("en")
@@ -38,84 +39,10 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="font-bold text-2xl">
-            SJCA
-          </Link>
-
-          <div className="hidden lg:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.en}
-                href={`/${item.en.toLowerCase().replace(/\s+/g, "-")}`}
-                className="text-sm font-medium hover:underline underline-offset-8 decoration-2"
-              >
-                {language === "en" ? item.en : item.zh}
-              </Link>
-            ))}
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <LanguageToggle language={language} toggleLanguage={toggleLanguage} />
-
-            <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileMenuOpen(true)}>
-              <Menu className="h-6 w-6" />
-            </Button>
-          </div>
-        </div>
-        {showBanner && (
-          <>
-            <div className="border-b border-black" />
-            <div className="bg-gray-200 py-2 relative">
-              <p className="text-sm font-medium text-center">Today's Daily Bread: 1 Peter 2:11-25</p>
-              <button 
-                className="absolute right-4 top-1/2 -translate-y-1/2"
-                onClick={() => setShowBanner(false)}
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-          </>
-        )}
-
-        {/* Mobile menu */}
-        {mobileMenuOpen && (
-          <div className="fixed inset-0 z-50 bg-white lg:hidden">
-            <div className="container mx-auto px-4 py-4 flex flex-col h-full">
-              <div className="flex items-center justify-between mb-8">
-                <Link href="/" className="font-bold text-2xl">
-                  SJCA
-                </Link>
-                <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(false)}>
-                  <X className="h-6 w-6" />
-                </Button>
-              </div>
-
-              <div className="flex flex-col space-y-6">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.en}
-                    href={`/${item.en.toLowerCase().replace(/\s+/g, "-")}`}
-                    className="text-lg font-medium hover:underline underline-offset-8 decoration-2"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {language === "en" ? item.en : item.zh}
-                  </Link>
-                ))}
-              </div>
-
-              <div className="mt-auto mb-8 flex justify-center">
-                <Link href="https://youtube.com" target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" size="icon" className="rounded-none border-2">
-                    <Youtube className="h-5 w-5" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        )}
-      </header>
+      <MainNav 
+        language={language} 
+        toggleLanguage={toggleLanguage}
+      />
 
       <main className="flex-1 pt-14">
         {/* Hero section with video background */}
