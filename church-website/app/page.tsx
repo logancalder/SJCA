@@ -3,21 +3,26 @@
 import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Menu, X, Users, BookOpen, Heart } from "lucide-react"
-import LanguageToggle from "@/components/language-toggle"
+import { Users, BookOpen, Heart } from "lucide-react"
 import VideoBackground from "@/components/video-background"
 import DailyDevotional from "@/components/daily-devotional"
 import EventsCalendar from "@/components/events-calendar"
 import { motion } from "framer-motion"
 import MainNav from "@/app/components/main-nav"
+import { useToast } from "@/hooks/use-toast"
 
 export default function Home() {
   const [language, setLanguage] = useState<"en" | "zh">("en")
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [showBanner, setShowBanner] = useState(true)
-
+  const { toast } = useToast()
   const toggleLanguage = () => {
-    setLanguage(language === "en" ? "zh" : "en")
+    const newLanguage = language === "en" ? "zh" : "en"
+    setLanguage(newLanguage)
+    
+    toast({
+      title: newLanguage === "en" ? "Language Changed" : "语言已更改",
+      description: newLanguage === "en" ? "Switched to English" : "已切换至中文",
+      duration: 2000,
+    })
   }
 
   const navItems = [
