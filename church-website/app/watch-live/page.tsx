@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import MainNav from "@/app/components/main-nav"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import MainFooter from "../components/main-footer"
 
 export default function WatchLivePage() {
   const [language, setLanguage] = useState<"en" | "zh">("en")
@@ -41,7 +42,7 @@ export default function WatchLivePage() {
               </h1>
               <p className="text-xl text-gray-600">
                 {language === "en" 
-                  ? "Join us for our live service every Sunday at 9:30 AM PST"
+                  ? "JOIN US FOR OUR LIVE SERVICE EVERY SUNDAY AT 9:30 AM PST"
                   : "每周日上午9:30（太平洋时间）加入我们的在线崇拜"}
               </p>
             </motion.div>
@@ -56,7 +57,7 @@ export default function WatchLivePage() {
             >
               <iframe
                 className="w-full h-full"
-                src="https://www.youtube.com/embed/@SanJoseChristianAssembly/live"
+                src="https://www.youtube.com/embed/live_stream?channel=UCMEt-YRjmqPIcv3_bXtDH2Q"
                 frameBorder="0"
                 allowFullScreen
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -109,64 +110,7 @@ export default function WatchLivePage() {
         </section>
       </main>
 
-      <footer className="bg-black text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="font-bold text-xl mb-4">
-                {language === "en" ? "San Jose Christian Assembly" : "圣何塞基督教会"}
-              </h3>
-              <p className="text-gray-400">
-                {language === "en"
-                  ? "215 Topaz St, Milpitas, CA 95035"
-                  : "加利福尼亚州圣何塞教堂街123号，邮编95123"}
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-xl mb-4">{language === "en" ? "Service Times" : "礼拜时间"}</h3>
-              <p className="text-gray-400">
-                {language === "en" ? "Sunday: 9:30 AM" : "周日：上午9:30"}
-              </p>
-              <p className="text-gray-400">
-                {language === "en" ? "Wednesday Bible Study: 7:00 PM" : "周三查经：晚上7:00"}
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-xl mb-4">{language === "en" ? "Follow Us" : "关注我们"}</h3>
-              <div className="flex space-x-4">
-                <Link href="https://www.youtube.com/@SanJoseChristianAssembly" target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" size="icon" className="rounded-none border-2 bg-transparent">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="h-5 w-5 text-white"
-                    >
-                      <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
-                      <path d="m10 15 5-3-5-3z" />
-                    </svg>
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-8 pt-8 border-t border-gray-800 text-center">
-            <p className="text-gray-500 text-sm">
-              &copy; {new Date().getFullYear()}{" "}
-              {language === "en" ? "San Jose Christian Assembly. All rights reserved." : "圣何塞基督教会。版权所有。"}
-            </p>
-          </div>
-        </div>
-      </footer>
+      <MainFooter language={language} />
     </div>
   )
 }

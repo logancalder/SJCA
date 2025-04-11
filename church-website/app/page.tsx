@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Menu, X, Users, BookOpen, Heart } from "lucide-react"
@@ -10,11 +10,62 @@ import DailyDevotional from "@/components/daily-devotional"
 import EventsCalendar from "@/components/events-calendar"
 import { motion } from "framer-motion"
 import MainNav from "@/app/components/main-nav"
+import MainFooter from "./components/main-footer"
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
+
+import { createClientComponentClient } from "@/lib/supabase";
 
 export default function Home() {
   const [language, setLanguage] = useState<"en" | "zh">("en")
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [showBanner, setShowBanner] = useState(true)
+
+  const supabase = createClientComponentClient();
+  const [isLoading, setIsLoading] = useState(false);
+  const user = useUser();
+  const dataFetchedRef = useRef(false);
+  const [envError, setEnvError] = useState(false);
+  const [verseData, setVerseData] = useState<any>(null);
+
+  useEffect(() => {
+    // Prevent multiple fetches
+    if (dataFetchedRef.current) return;
+    
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        
+        // Check if environment variables are set
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+        const date = new Date().toISOString().split('T')[0];
+        console.log("date: ", date);
+
+        if (!supabaseUrl || !supabaseAnonKey) {
+          setEnvError(true);
+          return;
+        }
+
+        // Fetch verse data from API using today's date
+        const response = await fetch(`/api/daily-bread?date=${date}`);
+        console.log("Fetching with date:", date);
+        
+        if (response.ok) {
+          const data = await response.json();
+          setVerseData(data);
+          dataFetchedRef.current = true;
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []); // Empty dependency array since we only want to fetch once on mount
+
 
   const toggleLanguage = () => {
     setLanguage(language === "en" ? "zh" : "en")
@@ -67,6 +118,38 @@ export default function Home() {
                 </Button>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Daily Verse Section - New */}
+        <section className="py-12 bg-secondary border-b-2">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeInVariants}
+              transition={{ duration: 0.6 }}
+              className="max-w-4xl mx-auto text-center"
+            >
+              <h2 className="text-2xl font-bold mb-6">
+                {language === "en" ? "TODAY'S DAILY BREAD" : "今日经文"}
+              </h2>
+              {verseData ? (
+                <>
+                  <blockquote className="text-2xl italic mb-4">
+                    {language === "en" ? verseData.verse : verseData.verse_zh}
+                  </blockquote>
+                  <p className="text-lg font-medium text-gray-600">
+                    {language === "en" ? verseData.reference : verseData.reference_zh}
+                  </p>
+                </>
+              ) : (
+                <p className="text-lg text-gray-600">
+                  {language === "en" ? "Loading daily bread..." : "加载中..."}
+                </p>
+              )}
+            </motion.div>
           </div>
         </section>
 
@@ -416,58 +499,7 @@ export default function Home() {
           </div>
         </section>
 
-
-      <footer className="bg-black text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="font-bold text-xl mb-4">
-                {language === "en" ? "San Jose Christian Assembly" : "圣何塞基督教会"}
-              </h3>
-              <p className="text-gray-400">
-                {language === "en"
-                  ? "215 Topaz St, Milpitas, CA 95035"
-                  : "加利福尼亚州圣何塞教堂街123号，邮编95123"}
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-xl mb-4">{language === "en" ? "Service Times" : "礼拜时间"}</h3>
-              <p className="text-gray-400">
-                {language === "en" ? "Sunday: 9:30 AM" : "周日：上午9:30"}
-              </p>
-              <p className="text-gray-400">
-                {language === "en" ? "Friday Bible Study: 7:30 PM" : "7:30"}
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-xl mb-4">{language === "en" ? "Follow Us" : "关注我们"}</h3>
-              <div className="flex space-x-4">
-                <Link href="https://youtube.com" target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" size="icon" className="rounded-none border-2 bg-transparent">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="h-5 w-5 text-white"
-                    >
-                      <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
-                      <path d="m10 15 5-3-5-3z" />
-                    </svg>
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+        <MainFooter language={language} />
     </div>
   )
 }
