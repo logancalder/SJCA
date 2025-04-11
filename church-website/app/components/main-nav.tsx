@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Menu, X, ChevronDown } from "lucide-react"
+import { Menu, X, ChevronDown, User } from "lucide-react"
 import LanguageToggle from "@/components/language-toggle"
 
 interface MainNavProps {
@@ -76,6 +76,11 @@ export default function MainNav({ language, toggleLanguage, currentPage }: MainN
 
         <div className="flex items-center space-x-4">
           <LanguageToggle language={language} toggleLanguage={toggleLanguage} />
+          <Link href="/profile">
+            <Button variant="outline" size="icon" className="rounded-none border-2">
+              <User className="h-4 w-4" />
+            </Button>
+          </Link>
 
           <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileMenuOpen(true)}>
             <Menu className="h-6 w-6" />

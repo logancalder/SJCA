@@ -3,8 +3,7 @@
 import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Menu, X, Users, BookOpen, Heart } from "lucide-react"
-import LanguageToggle from "@/components/language-toggle"
+import { Users, BookOpen, Heart } from "lucide-react"
 import VideoBackground from "@/components/video-background"
 import DailyDevotional from "@/components/daily-devotional"
 import EventsCalendar from "@/components/events-calendar"
@@ -12,7 +11,7 @@ import { motion } from "framer-motion"
 import MainNav from "@/app/components/main-nav"
 import MainFooter from "./components/main-footer"
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
-
+import { useToast } from "@/hooks/use-toast"
 import { createClientComponentClient } from "@/lib/supabase";
 
 export default function Home() {
@@ -67,8 +66,19 @@ export default function Home() {
   }, []); // Empty dependency array since we only want to fetch once on mount
 
 
+
+export default function Home() {
+  const [language, setLanguage] = useState<"en" | "zh">("en")
+  const { toast } = useToast()
   const toggleLanguage = () => {
-    setLanguage(language === "en" ? "zh" : "en")
+    const newLanguage = language === "en" ? "zh" : "en"
+    setLanguage(newLanguage)
+    
+    toast({
+      title: newLanguage === "en" ? "Language Changed" : "语言已更改",
+      description: newLanguage === "en" ? "Switched to English" : "已切换至中文",
+      duration: 2000,
+    })
   }
 
   const navItems = [
