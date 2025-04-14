@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Users, BookOpen, Heart } from "lucide-react"
@@ -10,66 +10,60 @@ import EventsCalendar from "@/components/events-calendar"
 import { motion } from "framer-motion"
 import MainNav from "@/app/components/main-nav"
 import MainFooter from "./components/main-footer"
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react"
 import { useToast } from "@/hooks/use-toast"
-import { createClientComponentClient } from "@/lib/supabase";
 
 export default function Home() {
   const [language, setLanguage] = useState<"en" | "zh">("en")
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [showBanner, setShowBanner] = useState(true)
+  const [verseData, setVerseData] = useState<DailyBreadData | null>(null)
+  interface DailyBreadData {
+    verse: string;
+    verse_zh: string;
+    content: string;
+    content_zh: string;
+    date: string;
+    verses: Verse[];
+    verses_zh: Verse[];
+  }
 
-  const supabase = createClientComponentClient();
+  interface Verse {
+    book_id: string;
+    book_name: string;
+    chapter: number;
+    verse: number;
+    text: string;
+  }
+
+
   const [isLoading, setIsLoading] = useState(false);
-  const user = useUser();
-  const dataFetchedRef = useRef(false);
-  const [envError, setEnvError] = useState(false);
-  const [verseData, setVerseData] = useState<any>(null);
+  const { toast } = useToast()
+  const { DateTime } = require('luxon');
+  const date = DateTime.now().setZone('America/Los_Angeles').toISODate();
 
   useEffect(() => {
-    // Prevent multiple fetches
-    if (dataFetchedRef.current) return;
-    
-    const fetchData = async () => {
+    const fetchVerseData = async () => {
       try {
-        setIsLoading(true);
+        setIsLoading(true)
+        const response = await fetch(`/api/daily-bread?date=${date || new Date().toISOString().split('T')[0]}`)
         
-        // Check if environment variables are set
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-        const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-        const date = new Date().toISOString().split('T')[0];
-        console.log("date: ", date);
-
-        if (!supabaseUrl || !supabaseAnonKey) {
-          setEnvError(true);
-          return;
+        if (!response.ok) {
+          throw new Error("Failed to fetch verse data")
         }
-
-        // Fetch verse data from API using today's date
-        const response = await fetch(`/api/daily-bread?date=${date}`);
-        console.log("Fetching with date:", date);
         
-        if (response.ok) {
-          const data = await response.json();
-          setVerseData(data);
-          dataFetchedRef.current = true;
-        }
+        const data = await response.json()
+        setVerseData(data)
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching verse data:", error)
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
-    };
+    }
 
-    fetchData();
-  }, []); // Empty dependency array since we only want to fetch once on mount
+    fetchVerseData()
+  }, [date])
 
-
-
-export default function Home() {
-  const [language, setLanguage] = useState<"en" | "zh">("en")
-  const { toast } = useToast()
+  
   const toggleLanguage = () => {
     const newLanguage = language === "en" ? "zh" : "en"
     setLanguage(newLanguage)
@@ -80,18 +74,6 @@ export default function Home() {
       duration: 2000,
     })
   }
-
-  const navItems = [
-    { en: "ABOUT", zh: "关于我们" },
-    { en: "MISSION", zh: "使命" },
-    { en: "GROUPS", zh: "小组" },
-    { en: "CONNECT", zh: "联系" },
-    { en: "HISTORY", zh: "历史" },
-    { en: "WATCH LIVE", zh: "在线观看" },
-    { en: "BIBLE STUDY", zh: "查经" },
-    { en: "GIVE", zh: "奉献" },
-    { en: "YOUTH", zh: "青年" },
-  ]
 
   const fadeInVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -132,7 +114,7 @@ export default function Home() {
         </section>
 
         {/* Daily Verse Section - New */}
-        <section className="py-12 bg-secondary border-b-2">
+        <section className="pt-12 pb-4 bg-secondary border-b-2">
           <div className="container mx-auto px-4">
             <motion.div
               initial="hidden"
@@ -148,11 +130,13 @@ export default function Home() {
               {verseData ? (
                 <>
                   <blockquote className="text-2xl italic mb-4">
-                    {language === "en" ? verseData.verse : verseData.verse_zh}
+                    <Link 
+                      href={`/daily-bread?date=${verseData.date}`}
+                      className="hover:underline"
+                    >
+                      {language === "en" ? verseData.verse : verseData.verse_zh}
+                    </Link>
                   </blockquote>
-                  <p className="text-lg font-medium text-gray-600">
-                    {language === "en" ? verseData.reference : verseData.reference_zh}
-                  </p>
                 </>
               ) : (
                 <p className="text-lg text-gray-600">
@@ -182,7 +166,7 @@ export default function Home() {
               className="max-w-5xl mx-auto text-center"
             >
               <h1 className="font-bold text-4xl md:text-6xl mb-4 tracking-tight">
-                {language === "en" ? "WELCOME TO YOUR NEW FAMILY IN CHRIST" : "我们的使命"}
+                {language === "en" ? "WELCOME TO YOUR NEW FAMILY IN CHRIST" : "欢迎加入你在基督里的新家庭"}
               </h1>
             </motion.div>
           </motion.div>

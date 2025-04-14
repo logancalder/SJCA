@@ -8,6 +8,8 @@ import { Menu, X, ChevronLeft, ChevronRight, Search, Bookmark, Share2, ArrowLeft
 import LanguageToggle from "@/components/language-toggle"
 import BibleNavigation from "@/components/bible-navigation"
 import { bibleData, type BibleBook } from "@/lib/bible-data"
+import MainNav from "@/app/components/main-nav"
+import MainFooter from "@/app/components/main-footer"
 
 export default function BibleStudyPage() {
   const [language, setLanguage] = useState<"en" | "zh">("en")
@@ -91,68 +93,13 @@ export default function BibleStudyPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="font-bold text-2xl">
-            SJCA
-          </Link>
+      <MainNav 
+        language={language} 
+        toggleLanguage={toggleLanguage}
+        currentPage="Bible Study"
+      />
 
-          <div className="hidden lg:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.en}
-                href={`/${item.en.toLowerCase().replace(/\s+/g, "-")}`}
-                className={`text-sm font-medium hover:underline underline-offset-8 decoration-2 ${
-                  item.en === "Bible Study" ? "underline" : ""
-                }`}
-              >
-                {language === "en" ? item.en : item.zh}
-              </Link>
-            ))}
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <LanguageToggle language={language} toggleLanguage={toggleLanguage} />
-
-            <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileMenuOpen(true)}>
-              <Menu className="h-6 w-6" />
-            </Button>
-          </div>
-        </div>
-
-        {/* Mobile menu */}
-        {mobileMenuOpen && (
-          <div className="fixed inset-0 z-50 bg-white lg:hidden">
-            <div className="container mx-auto px-4 py-4 flex flex-col h-full">
-              <div className="flex items-center justify-between mb-8">
-                <Link href="/" className="font-bold text-2xl">
-                  SJCA
-                </Link>
-                <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(false)}>
-                  <X className="h-6 w-6" />
-                </Button>
-              </div>
-
-              <div className="flex flex-col space-y-6">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.en}
-                    href={`/${item.en.toLowerCase().replace(/\s+/g, "-")}`}
-                    className={`text-lg font-medium hover:underline underline-offset-8 decoration-2 ${
-                      item.en === "Bible Study" ? "underline" : ""
-                    }`}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {language === "en" ? item.en : item.zh}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-      </header>
-
-      <main className="flex-1 pt-20 flex">
+      <main className="flex-1 pt-14">
         {/* Bible navigation sidebar */}
         <div
           className={`fixed top-20 bottom-0 bg-white border-r border-black z-40 transition-all duration-300 ${
@@ -271,64 +218,7 @@ export default function BibleStudyPage() {
         </div>
       </main>
 
-      <footer className="bg-black text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="font-bold text-xl mb-4">
-                {language === "en" ? "San Jose Christian Assembly" : "圣何塞基督教会"}
-              </h3>
-              <p className="text-gray-400">
-                {language === "en"
-                  ? "123 Church Street, San Jose, CA 95123"
-                  : "加利福尼亚州圣何塞教堂街123号，邮编95123"}
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-xl mb-4">{language === "en" ? "Service Times" : "礼拜时间"}</h3>
-              <p className="text-gray-400">
-                {language === "en" ? "Sunday: 9:00 AM & 11:00 AM" : "周日：上午9:00和上午11:00"}
-              </p>
-              <p className="text-gray-400">
-                {language === "en" ? "Wednesday Bible Study: 7:00 PM" : "周三查经：晚上7:00"}
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-xl mb-4">{language === "en" ? "Follow Us" : "关注我们"}</h3>
-              <div className="flex space-x-4">
-                <Link href="https://youtube.com" target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" size="icon" className="rounded-none border-2 bg-transparent">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="h-5 w-5 text-white"
-                    >
-                      <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
-                      <path d="m10 15 5-3-5-3z" />
-                    </svg>
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-8 pt-8 border-t border-gray-800 text-center">
-            <p className="text-gray-500 text-sm">
-              &copy; {new Date().getFullYear()}{" "}
-              {language === "en" ? "San Jose Christian Assembly. All rights reserved." : "圣何塞基督教会。版权所有。"}
-            </p>
-          </div>
-        </div>
-      </footer>
+      <MainFooter language={language} />
     </div>
   )
 }

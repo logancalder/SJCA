@@ -7,7 +7,9 @@ import { Menu, X, ChevronUp } from "lucide-react"
 import LanguageToggle from "@/components/language-toggle"
 import TimelineEvent from "@/components/timeline-event"
 import MainNav from "@/app/components/main-nav"
-import MainFooter from "../components/main-footer"
+import MainFooter from "@/components/main-footer"
+import { motion } from "framer-motion"
+import ParallaxHero from "@/components/parallax-hero"
 
 export default function HistoryPage() {
   const [language, setLanguage] = useState<"en" | "zh">("en")
@@ -145,27 +147,35 @@ export default function HistoryPage() {
     })
   }
 
+  const fadeInVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <MainNav 
         language={language} 
         toggleLanguage={toggleLanguage}
+        currentPage="History"
       />
 
       <main className="flex-1 pt-14">
-        {/* Hero section */}
-        <section className="bg-black text-white py-20">
-          <div className="container mx-auto px-4 text-center">
-            <h1 className="font-bold text-4xl md:text-6xl mb-4 tracking-tight">
-              {language === "en" ? "OUR HISTORY" : "我们的历史"}
-            </h1>
-            <p className="text-xl max-w-2xl mx-auto">
-              {language === "en"
-                ? "THE STORY OF OUR FAMILY IN CHRIST"
-                : "圣何塞基督教会多年来的旅程"}
-            </p>
-          </div>
-        </section>
+        {/* Hero Section */}
+        <ParallaxHero
+          type="image"
+          src="/history-hero.jpg"
+          overlayOpacity={60}
+        >
+          <h1 className="font-bold text-4xl md:text-6xl mb-4">
+            {language === "en" ? "OUR HISTORY" : "我们的历史"}
+          </h1>
+          <p className="text-xl max-w-2xl mx-auto">
+            {language === "en" 
+              ? "The story of our family in Christ"
+              : "我们在基督里的家庭故事"}
+          </p>
+        </ParallaxHero>
 
         {/* Timeline section */}
         <section className="py-16 relative" ref={timelineRef}>
