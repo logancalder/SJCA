@@ -470,12 +470,16 @@ export default function Home() {
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* Daily devotional */}
+              {/* TODO: Subscribe button doesn't work */}
               <DailyDevotional language={language} />
-
+                  
               {/* Events calendar */}
+              {/* TODO: Events calendar is offset */}
+              {/* TODO: Events calendar doesn't read from DB */}
               <EventsCalendar language={language} />
 
               {/* Bible Study card */}
+              {/* TODO: This needs to be updated from DB */}
               <div className="bg-white border-2 border-black p-6 flex flex-col h-full">
                 <h2 className="font-bold text-xl mb-4">{language === "en" ? "Bible Study" : "查经"}</h2>
                 <p className="text-muted-foreground mb-6">

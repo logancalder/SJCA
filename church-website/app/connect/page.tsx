@@ -173,7 +173,7 @@ export default function ConnectPage() {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full p-3 border-2 text-white border-black"
+                    className="w-full p-3 border-2 border-black"
                     required
                   />
                 </div>
@@ -185,7 +185,7 @@ export default function ConnectPage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full p-3 border-2 text-white border-black"
+                    className="w-full p-3 border-2 border-black"
                     required
                   />
                 </div>
@@ -196,7 +196,7 @@ export default function ConnectPage() {
                   <textarea
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    className="w-full p-3 border-2 text-white border-black h-32"
+                    className="w-full p-3 border-2 border-black h-32"
                     required
                   ></textarea>
                 </div>
