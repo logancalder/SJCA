@@ -37,7 +37,8 @@ function DailyBreadContent() {
     const fetchVerseData = async () => {
       try {
         setIsLoading(true)
-        const response = await fetch(`/api/daily-bread?date=${date || new Date().toISOString().split('T')[0]}`)
+        const date = searchParams.get("date") || new Date().toISOString().split('T')[0]
+        const response = await fetch(`/api/daily-bread?date=${date}`)
         
         if (!response.ok) {
           throw new Error("Failed to fetch verse data")
@@ -87,10 +88,12 @@ function DailyBreadContent() {
                       {language === "en" ? verseData.verse : verseData.verse_zh}
                     </h2>
                     <p className="text-sm text-gray-500">
-                      {new Date(verseData.date).toLocaleDateString(
-                        language === "en" ? "en-US" : "zh-CN",
-                        { year: "numeric", month: "long", day: "numeric" }
-                      )}
+                      {new Date(verseData.date).toLocaleString('en-US', {
+                        timeZone: 'Asia/Shanghai',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
                     </p>
                   </div>
                   

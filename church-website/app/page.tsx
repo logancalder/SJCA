@@ -39,13 +39,14 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast()
   const { DateTime } = require('luxon');
-  const date = DateTime.now().setZone('America/Los_Angeles').toISODate();
+  // Get today's date in Pacific Time
+  const date = DateTime.now().setZone('America/Los_Angeles').toFormat('yyyy-MM-dd');
 
   useEffect(() => {
     const fetchVerseData = async () => {
       try {
         setIsLoading(true)
-        const response = await fetch(`/api/daily-bread?date=${date || new Date().toISOString().split('T')[0]}`)
+        const response = await fetch(`/api/daily-bread?date=${date}`)
         
         if (!response.ok) {
           throw new Error("Failed to fetch verse data")
@@ -127,7 +128,12 @@ export default function Home() {
               <h2 className="text-2xl font-bold mb-6">
                 {language === "en" ? "TODAY'S DAILY BREAD" : "今日经文"}
               </h2>
-              {verseData ? (
+              {isLoading ? (
+                <div className="animate-pulse space-y-4">
+                  <div className="h-6 bg-gray-200 rounded w-3/4 mx-auto"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
+                </div>
+              ) : verseData ? (
                 <>
                   <blockquote className="text-2xl italic mb-4">
                     <Link 

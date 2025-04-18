@@ -198,8 +198,36 @@ export async function GET(request: Request) {
     if (!data) {
       // Fetch default verse content from Bible API
       const defaultVerse = "John 3:16";
-      const defaultContent = await fetchVerseContent(defaultVerse);
-      const defaultContentZh = await fetchVerseContent(defaultVerse, true);
+      
+      const defaultContent = {
+        reference: "John 3:16",
+        verses: [{
+          book_id: "JHN",
+          book_name: "John",
+          chapter: 3,
+          verse: 16,
+          text: "\nFor God so loved the world, that he gave his one and only Son, that whoever believes in him should not perish, but have eternal life.\n\n"
+        }],
+        text: "\nFor God so loved the world, that he gave his one and only Son, that whoever believes in him should not perish, but have eternal life.\n\n",
+        translation_id: "web",
+        translation_name: "World English Bible",
+        translation_note: "Public Domain"
+      };
+
+      const defaultContentZh = {
+        reference: "約翰福音 3:16",
+        verses: [{
+          book_id: "JHN",
+          book_name: "約翰福音",
+          chapter: 3,
+          verse: 16,
+          text: "神愛世人，甚至將他的獨生子賜給他們，叫一切信他的，不至滅亡，反得永生。"
+        }],
+        text: "神愛世人，甚至將他的獨生子賜給他們，叫一切信他的，不至滅亡，反得永生。",
+        translation_id: "cuv",
+        translation_name: "Chinese Union Version",
+        translation_note: "Public Domain"
+      };
       
       return NextResponse.json({
         verse: defaultVerse,

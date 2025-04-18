@@ -85,15 +85,17 @@ export default function ProfilePage() {
             </div>
 
             {/* Temporary admin toggle for demo */}
+            {isAdmin && (
             <div className="mb-8">
+              <Link href="/admin">
               <Button 
                 variant="outline" 
-                onClick={() => setIsAdmin(!isAdmin)}
                 className="w-full"
               >
-                {isAdmin ? "Switch to User View" : "Switch to Admin View"}
-              </Button>
+                
+              </Button></Link>
             </div>
+            )}
 
             {isAdmin && (
               <motion.div 

@@ -84,7 +84,7 @@ export default function GivePage() {
 
       <main className="flex-1 pt-14">
         {/* Hero Banner Section */}
-        <section className="relative h-[60vh] overflow-hidden">
+        {/* <section className="relative h-[60vh] overflow-hidden">
           <div className="absolute inset-0">
             <img
               src="/giving-banner.jpg"
@@ -93,7 +93,7 @@ export default function GivePage() {
             />
             <div className="absolute inset-0 bg-black/50"></div>
           </div>
-        </section>
+        </section> */}
 
         {/* Give Section */}
         <section className="py-20 px-4">
@@ -102,7 +102,7 @@ export default function GivePage() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              variants={fadeInVariants}
+              // variants={fadeInVariants}
               transition={{ duration: 0.6 }}
               className="text-center mb-16"
             >
@@ -121,7 +121,7 @@ export default function GivePage() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              variants={fadeInVariants}
+              // variants={fadeInVariants}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="grid md:grid-cols-2 gap-8 mb-20"
             >
@@ -161,7 +161,7 @@ export default function GivePage() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              variants={fadeInVariants}
+              // variants={fadeInVariants}
               transition={{ duration: 0.6, delay: 0.4 }}
               className="text-center max-w-3xl mx-auto"
             >

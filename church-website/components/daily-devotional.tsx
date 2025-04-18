@@ -29,6 +29,7 @@ interface DailyBreadData {
 
 export default function DailyDevotional({ language }: DailyDevotionalProps) {
   const [verseData, setVerseData] = useState<DailyBreadData | null>(null)
+  const [upcomingVerses, setUpcomingVerses] = useState<DailyBreadData[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [devotion, setDevotion] = useState({
     en: "Take a moment today to reflect on God's incredible love for you. How might this change how you approach your day?",
@@ -40,7 +41,8 @@ export default function DailyDevotional({ language }: DailyDevotionalProps) {
       try {
         setIsLoading(true)
         const { DateTime } = require('luxon');
-        const date = DateTime.now().setZone('America/Los_Angeles').toISODate();
+        // Get today's date in Pacific Time
+        const date = DateTime.now().setZone('America/Los_Angeles').toFormat('yyyy-MM-dd');
 
         const response = await fetch(`/api/daily-bread?date=${date}`)
         
@@ -50,6 +52,24 @@ export default function DailyDevotional({ language }: DailyDevotionalProps) {
         
         const data = await response.json()
         setVerseData(data)
+        
+        // Fetch upcoming verses
+        const upcomingVersesData = await Promise.all(
+          Array.from({ length: 4 }, async (_, i) => {
+            const nextDate = DateTime.now()
+              .setZone('America/Los_Angeles')
+              .plus({ days: i + 1 })
+              .toFormat('yyyy-MM-dd');
+            
+            const nextResponse = await fetch(`/api/daily-bread?date=${nextDate}`);
+            if (!nextResponse.ok) {
+              throw new Error(`Failed to fetch verse data for ${nextDate}`);
+            }
+            return nextResponse.json();
+          })
+        );
+        
+        setUpcomingVerses(upcomingVersesData);
       } catch (error) {
         console.error("Error fetching verse data:", error)
       } finally {
@@ -108,12 +128,32 @@ export default function DailyDevotional({ language }: DailyDevotionalProps) {
         )}
         <p className="text-muted-foreground">{language === "en" ? devotion.en : devotion.zh}</p>
       </div>
-      <div className="pt-4 flex flex-col gap-3">
-        <Link href="/subscribe">
-          <Button variant="outline" className="w-full rounded-none border-2">
-            {language === "en" ? "Subscribe to Daily Devotions" : "订阅每日灵修"}
-          </Button>
-        </Link>
+      <div className="pt-2">
+        <h3 className="font-medium mb-2">
+          <b>{language === "en" ? "Upcoming Readings" : "即将到来的阅读"}</b>
+        </h3>
+        <ul className="space-y-2">
+          {upcomingVerses.map((verse, index) => {
+            const { DateTime } = require('luxon');
+            const verseDate = DateTime.fromISO(verse.date)
+              .setZone('America/Los_Angeles')
+              .toFormat('EEEE, MMM d');
+            
+            return (
+              <li key={verse.date} className="text-sm">
+                <Link 
+                  href={`/daily-bread?date=${verse.date}`}
+                  className="hover:underline flex items-center justify-between"
+                >
+                  <span>
+                    <b>{verseDate}</b> - {language === "en" ? verse.verse : verse.verse_zh}
+                  </span>
+                  <ArrowRight className="h-3 w-3 ml-1 flex-shrink-0" />
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </div>
   )

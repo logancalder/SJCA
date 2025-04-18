@@ -164,7 +164,7 @@ export default function ConnectPage() {
               <h2 className="text-3xl font-bold mb-8 text-center">
                 {language === "en" ? "SEND US A MESSAGE" : "发送消息"}
               </h2>
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6 pb-10">
                 <div>
                   <label className="block mb-2 font-medium">
                     {language === "en" ? "Name" : "姓名"}
