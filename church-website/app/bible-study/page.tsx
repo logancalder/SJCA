@@ -57,7 +57,7 @@ export default function BibleStudyPage() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              variants={fadeInVariants}
+              // variants={fadeInVariants}
               transition={{ duration: 0.6 }}
               className="max-w-4xl mx-auto"
             >

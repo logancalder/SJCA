@@ -284,7 +284,7 @@ export default function Home() {
                 <div className="overflow-hidden">
                   <div className="aspect-square relative">
                     <img
-                      src="/pastor.jpg?height=400&width=400"
+                      src="/DSC_0576.jpg?height=400&width=400"
                       alt={language === "en" ? "Pastor John Smith" : "欢欢欢欢欢欢欢"}
                       className="w-full h-full object-cover"
                     />
@@ -342,7 +342,7 @@ export default function Home() {
                   <div className="overflow-hidden relative mb-6">
                     <div className="aspect-square">
                       <img
-                        src="/pexels-eberhardgross-691668.jpg?height=400&width=400"
+                        src="!yuelan_cropped.jpg?height=400&width=400"
                         alt={language === "en" ? "SMALL GROUPS" : "小组"}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />

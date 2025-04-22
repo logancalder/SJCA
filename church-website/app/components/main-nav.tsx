@@ -20,8 +20,8 @@ export default function MainNav({ language, toggleLanguage, currentPage }: MainN
     { en: "ABOUT", zh: "关于我们", dropdown: true },
     { en: "WATCH LIVE", zh: "在线观看" },
     { en: "BIBLE STUDY", zh: "查经" },
-    { en: "GIVE", zh: "奉献" },
     { en: "YOUTH", zh: "青年" },
+    { en: "GIVE", zh: "奉献" },
   ]
 
   const aboutDropdownItems = [

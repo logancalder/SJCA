@@ -52,18 +52,18 @@ export default function YouthPage() {
 
         {/* KFC - Kids for Christ (Right Image) */}
         <section className="py-16">
-          <div className="container mx-auto px-4">
+          <div className="container mx-auto px-4 pt-16">
             <motion.div
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              variants={fadeInVariants}
+              // variants={fadeInVariants}
               transition={{ duration: 0.6 }}
               className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 items-center"
             >
               <div>
                 <h2 className="text-3xl font-bold mb-6">
-                  {language === "en" ? "Kids for Christ (K-5)" : "儿童事工 (K-5)"}
+                  {language === "en" ? "Kids for Christ (K-2)" : "儿童事工 (K-5)"}
                 </h2>
                 <p className="text-lg mb-6">
                   {language === "en"
@@ -76,7 +76,7 @@ export default function YouthPage() {
               </div>
               <div className="aspect-4/3">
                 <img
-                  src="/kfc-ministry.jpg"
+                  src="/DSC_0792.jpg"
                   alt="Kids for Christ"
                   className="w-full h-full object-cover"
                 />
@@ -98,7 +98,7 @@ export default function YouthPage() {
             >
               <div className="md:order-2">
                 <h2 className="text-3xl font-bold mb-6">
-                  {language === "en" ? "Mustard Seed (6-8)" : "芥菜种 (6-8)"}
+                  {language === "en" ? "Mustard Seed (3-8)" : "芥菜种 (6-8)"}
                 </h2>
                 <p className="text-lg mb-6">
                   {language === "en"
@@ -146,7 +146,7 @@ export default function YouthPage() {
               </div>
               <div className="aspect-4/3">
                 <img
-                  src="/salt-ministry.jpg"
+                  src=""
                   alt="SALT Ministry"
                   className="w-full h-full object-cover"
                 />
@@ -181,7 +181,7 @@ export default function YouthPage() {
               </div>
               <div className="aspect-4/3 md:order-1">
                 <img
-                  src="/college-ministry.jpg"
+                  src="/!cottoncandygroup.jpg"
                   alt="College Ministry"
                   className="w-full h-full object-cover"
                 />
