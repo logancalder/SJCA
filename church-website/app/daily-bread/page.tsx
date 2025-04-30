@@ -88,7 +88,12 @@ function DailyBreadContent() {
                       {language === "en" ? verseData.verse : verseData.verse_zh}
                     </h2>
                     <p className="text-sm text-gray-500">
-                      {new Date(verseData.date).toLocaleString('en-US', {
+                      {date ? new Date(date).toLocaleString('en-US', {
+                        timeZone: 'Asia/Shanghai',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      }) : new Date().toLocaleString('en-US', {
                         timeZone: 'Asia/Shanghai',
                         year: 'numeric',
                         month: 'long',

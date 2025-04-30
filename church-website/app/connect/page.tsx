@@ -86,7 +86,8 @@ export default function ConnectPage() {
         {/* Hero Section */}
         <ParallaxHero
           type="image"
-          src="/green-pine-trees-covered-with-fog.jpg"
+          src="/easter_25/!cottoncandygroup.jpg"
+          initialOffset={-30}
         >
           <h1 className="font-bold text-4xl md:text-6xl mb-4">
             {language === "en" ? "CONNECT WITH US" : "联系我们"}

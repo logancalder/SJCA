@@ -11,6 +11,7 @@ import { motion } from "framer-motion"
 import MainNav from "@/app/components/main-nav"
 import MainFooter from "./components/main-footer"
 import { useToast } from "@/hooks/use-toast"
+import { getCachedVerse, setCachedVerse } from './utils/verse-cache';
 
 export default function Home() {
   const [language, setLanguage] = useState<"en" | "zh">("en")
@@ -39,21 +40,24 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast()
   const { DateTime } = require('luxon');
-  // Get today's date in Pacific Time
   const date = DateTime.now().setZone('America/Los_Angeles').toFormat('yyyy-MM-dd');
 
   useEffect(() => {
     const fetchVerseData = async () => {
       try {
+        console.log("Fetching verse data from API...")
         setIsLoading(true)
         const response = await fetch(`/api/daily-bread?date=${date}`)
         
         if (!response.ok) {
           throw new Error("Failed to fetch verse data")
         }
-        
+
         const data = await response.json()
+        
+        console.log("data (setting verse data)", data)  
         setVerseData(data)
+        
       } catch (error) {
         console.error("Error fetching verse data:", error)
       } finally {

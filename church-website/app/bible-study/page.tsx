@@ -6,6 +6,7 @@ import MainNav from "@/app/components/main-nav"
 import MainFooter from "@/app/components/main-footer"
 import { Button } from "@/components/ui/button"
 import { BookOpen, Clock, MapPin } from "lucide-react"
+import ParallaxHero from "@/components/parallax-hero"
 
 export default function BibleStudyPage() {
   const [language, setLanguage] = useState<"en" | "zh">("en")
@@ -28,16 +29,12 @@ export default function BibleStudyPage() {
 
       <main className="flex-1 pt-14">
         {/* Hero Section */}
-        <section className="relative h-[60vh] overflow-hidden">
-          <div className="absolute inset-0">
-            <img
-              src="/bible-study-hero.jpg"
-              alt="Bible Study"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-              <div className="text-center text-white">
-                <h1 className="font-bold text-4xl md:text-6xl mb-4">
+        <ParallaxHero
+          type="image"
+          src="/easter_25/DSC_0656.jpg"
+          initialOffset={0}
+        >
+          <h1 className="font-bold text-4xl md:text-6xl mb-4">
                   {language === "en" ? "BIBLE STUDY" : "查经"}
                 </h1>
                 <p className="text-xl max-w-2xl mx-auto">
@@ -45,10 +42,7 @@ export default function BibleStudyPage() {
                     ? "Dive deeper into God's Word together"
                     : "一起深入研读神的话语"}
                 </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        </ParallaxHero>
 
         {/* Current Study Section */}
         <section className="py-16">

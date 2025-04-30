@@ -9,14 +9,16 @@ interface ParallaxHeroProps {
   height?: string
   children: React.ReactNode
   overlayOpacity?: number
+  initialOffset?: number
 }
 
 export default function ParallaxHero({
   type,
   src,
-  height = "h-[60vh]",
+  height = "h-[55vh]",
   children,
-  overlayOpacity = 50
+  overlayOpacity = 50,
+  initialOffset = 0
 }: ParallaxHeroProps) {
   const heroRef = useRef<HTMLDivElement>(null)
 
@@ -25,7 +27,7 @@ export default function ParallaxHero({
     offset: ["start start", "end start"]
   })
 
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"])
+  const y = useTransform(scrollYProgress, [0, 1], [`${initialOffset}%`, `${initialOffset + 30}%`])
 
   return (
     <section ref={heroRef} className={`relative ${height} bg-black text-white overflow-hidden`}>
@@ -37,7 +39,7 @@ export default function ParallaxHero({
           <img
             src={src}
             alt="Hero background"
-            className="w-full h-[130%] object-cover object-center"
+            className={`w-full h-[${initialOffset + 100}%] object-cover object-center`}
           />
         ) : (
           <video
@@ -50,7 +52,7 @@ export default function ParallaxHero({
             <source src={src} type="video/mp4" />
           </video>
         )}
-        <div className={`absolute inset-0 bg-black/${overlayOpacity}`}></div>
+        <div className={`absolute inset-0 h-[130%] bg-black/${overlayOpacity}`}></div>
       </motion.div>
       <div className="relative container mx-auto px-4 h-full flex flex-col items-center justify-center text-center">
         {children}

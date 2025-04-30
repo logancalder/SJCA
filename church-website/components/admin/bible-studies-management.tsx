@@ -1,483 +1,278 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Plus, Pencil, Trash2 } from "lucide-react"
+import { createClient } from "@supabase/supabase-js"
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
 
 interface BibleStudy {
   id: string
   title: string
-  title_cn: string
-  description: string
-  description_cn: string
-  passage: string
-  passage_cn: string
+  content: string
   date: string
-  time: string
-  location: string
-  location_cn: string
-}
-
-interface BibleStudiesManagementProps {
   language: "en" | "zh"
 }
 
-export default function BibleStudiesManagement({ language }: BibleStudiesManagementProps) {
+interface BibleStudyManagementProps {
+  language: "en" | "zh"
+}
+
+export default function BibleStudyManagement({ language }: BibleStudyManagementProps) {
   const [bibleStudies, setBibleStudies] = useState<BibleStudy[]>([])
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [selectedBibleStudy, setSelectedBibleStudy] = useState<BibleStudy | null>(null)
-  const [newBibleStudy, setNewBibleStudy] = useState<Partial<BibleStudy>>({
+  const [formData, setFormData] = useState({
     title: "",
-    title_cn: "",
-    description: "",
-    description_cn: "",
-    passage: "",
-    passage_cn: "",
+    content: "",
     date: "",
-    time: "",
-    location: "",
-    location_cn: "",
+    language: language,
   })
 
-  const handleAddBibleStudy = async () => {
-    // TODO: Implement API call to add bible study
-    setIsAddDialogOpen(false)
-    setNewBibleStudy({
-      title: "",
-      title_cn: "",
-      description: "",
-      description_cn: "",
-      passage: "",
-      passage_cn: "",
-      date: "",
-      time: "",
-      location: "",
-      location_cn: "",
-    })
+  useEffect(() => {
+    fetchBibleStudies()
+  }, [])
+
+  const fetchBibleStudies = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("bibleStudies")
+        .select("*")
+        .eq("language", language)
+        .order("date", { ascending: false })
+
+      if (error) throw error
+      setBibleStudies(data || [])
+    } catch (error) {
+      console.error("Error fetching bible studies:", error)
+    }
   }
 
-  const handleEditBibleStudy = async () => {
-    // TODO: Implement API call to edit bible study
-    setIsEditDialogOpen(false)
-    setSelectedBibleStudy(null)
+  const handleAdd = async () => {
+    try {
+      const { error } = await supabase
+        .from("bibleStudies")
+        .insert([formData])
+
+      if (error) throw error
+      setIsAddDialogOpen(false)
+      setFormData({ title: "", content: "", date: "", language })
+      fetchBibleStudies()
+    } catch (error) {
+      console.error("Error adding bible study:", error)
+    }
   }
 
-  const handleDeleteBibleStudy = async (id: string) => {
-    // TODO: Implement API call to delete bible study
+  const handleEdit = async () => {
+    if (!selectedBibleStudy) return
+
+    try {
+      const { error } = await supabase
+        .from("bibleStudies")
+        .update(formData)
+        .eq("id", selectedBibleStudy.id)
+
+      if (error) throw error
+      setIsEditDialogOpen(false)
+      setSelectedBibleStudy(null)
+      setFormData({ title: "", content: "", date: "", language })
+      fetchBibleStudies()
+    } catch (error) {
+      console.error("Error updating bible study:", error)
+    }
+  }
+
+  const handleDelete = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("bibleStudies")
+        .delete()
+        .eq("id", id)
+
+      if (error) throw error
+      fetchBibleStudies()
+    } catch (error) {
+      console.error("Error deleting bible study:", error)
+    }
   }
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">
+        <h2 className="text-2xl font-bold">
           {language === "en" ? "Bible Studies" : "查经"}
         </h2>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="flex items-center gap-2">
-              <Plus className="h-4 w-4" />
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
               {language === "en" ? "Add New Bible Study" : "添加新查经"}
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-w-2xl">
             <DialogHeader>
               <DialogTitle>
                 {language === "en" ? "Add New Bible Study" : "添加新查经"}
               </DialogTitle>
-              <DialogDescription>
-                {language === "en"
-                  ? "Add a new bible study session"
-                  : "添加新的查经课程"}
-              </DialogDescription>
             </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
+            <div className="space-y-4">
+              <div>
                 <Label htmlFor="title">
-                  {language === "en" ? "Title (English)" : "标题（英文）"}
+                  {language === "en" ? "Title" : "标题"}
                 </Label>
                 <Input
                   id="title"
-                  value={newBibleStudy.title}
+                  value={formData.title}
                   onChange={(e) =>
-                    setNewBibleStudy({ ...newBibleStudy, title: e.target.value })
+                    setFormData({ ...formData, title: e.target.value })
                   }
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="title_cn">
-                  {language === "en" ? "Title (Chinese)" : "标题（中文）"}
-                </Label>
-                <Input
-                  id="title_cn"
-                  value={newBibleStudy.title_cn}
-                  onChange={(e) =>
-                    setNewBibleStudy({ ...newBibleStudy, title_cn: e.target.value })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="description">
-                  {language === "en" ? "Description (English)" : "描述（英文）"}
-                </Label>
-                <Textarea
-                  id="description"
-                  value={newBibleStudy.description}
-                  onChange={(e) =>
-                    setNewBibleStudy({ ...newBibleStudy, description: e.target.value })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="description_cn">
-                  {language === "en" ? "Description (Chinese)" : "描述（中文）"}
-                </Label>
-                <Textarea
-                  id="description_cn"
-                  value={newBibleStudy.description_cn}
-                  onChange={(e) =>
-                    setNewBibleStudy({ ...newBibleStudy, description_cn: e.target.value })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="passage">
-                  {language === "en" ? "Bible Passage (English)" : "经文（英文）"}
-                </Label>
-                <Input
-                  id="passage"
-                  value={newBibleStudy.passage}
-                  onChange={(e) =>
-                    setNewBibleStudy({ ...newBibleStudy, passage: e.target.value })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="passage_cn">
-                  {language === "en" ? "Bible Passage (Chinese)" : "经文（中文）"}
-                </Label>
-                <Input
-                  id="passage_cn"
-                  value={newBibleStudy.passage_cn}
-                  onChange={(e) =>
-                    setNewBibleStudy({ ...newBibleStudy, passage_cn: e.target.value })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
+              <div>
                 <Label htmlFor="date">
                   {language === "en" ? "Date" : "日期"}
                 </Label>
                 <Input
                   id="date"
                   type="date"
-                  value={newBibleStudy.date}
+                  value={formData.date}
                   onChange={(e) =>
-                    setNewBibleStudy({ ...newBibleStudy, date: e.target.value })
+                    setFormData({ ...formData, date: e.target.value })
                   }
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="time">
-                  {language === "en" ? "Time" : "时间"}
+              <div>
+                <Label htmlFor="content">
+                  {language === "en" ? "Content" : "内容"}
                 </Label>
-                <Input
-                  id="time"
-                  type="time"
-                  value={newBibleStudy.time}
+                <Textarea
+                  id="content"
+                  value={formData.content}
                   onChange={(e) =>
-                    setNewBibleStudy({ ...newBibleStudy, time: e.target.value })
+                    setFormData({ ...formData, content: e.target.value })
                   }
+                  className="min-h-[200px]"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="location">
-                  {language === "en" ? "Location (English)" : "地点（英文）"}
-                </Label>
-                <Input
-                  id="location"
-                  value={newBibleStudy.location}
-                  onChange={(e) =>
-                    setNewBibleStudy({ ...newBibleStudy, location: e.target.value })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="location_cn">
-                  {language === "en" ? "Location (Chinese)" : "地点（中文）"}
-                </Label>
-                <Input
-                  id="location_cn"
-                  value={newBibleStudy.location_cn}
-                  onChange={(e) =>
-                    setNewBibleStudy({ ...newBibleStudy, location_cn: e.target.value })
-                  }
-                />
-              </div>
+              <Button onClick={handleAdd} className="w-full">
+                {language === "en" ? "Add" : "添加"}
+              </Button>
             </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
-                {language === "en" ? "Cancel" : "取消"}
-              </Button>
-              <Button onClick={handleAddBibleStudy}>
-                {language === "en" ? "Add Bible Study" : "添加查经"}
-              </Button>
-            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
 
-      <div className="border rounded-lg">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{language === "en" ? "Title" : "标题"}</TableHead>
-              <TableHead>{language === "en" ? "Passage" : "经文"}</TableHead>
-              <TableHead>{language === "en" ? "Date & Time" : "日期和时间"}</TableHead>
-              <TableHead>{language === "en" ? "Location" : "地点"}</TableHead>
-              <TableHead className="text-right">
-                {language === "en" ? "Actions" : "操作"}
-              </TableHead>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>
+              {language === "en" ? "Title" : "标题"}
+            </TableHead>
+            <TableHead>
+              {language === "en" ? "Date" : "日期"}
+            </TableHead>
+            <TableHead>
+              {language === "en" ? "Actions" : "操作"}
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {bibleStudies.map((study) => (
+            <TableRow key={study.id}>
+              <TableCell>{study.title}</TableCell>
+              <TableCell>{study.date}</TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => {
+                      setSelectedBibleStudy(study)
+                      setFormData({
+                        title: study.title,
+                        content: study.content,
+                        date: study.date,
+                        language: study.language,
+                      })
+                      setIsEditDialogOpen(true)
+                    }}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleDelete(study.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </TableCell>
             </TableRow>
-          </TableHeader>
-          <TableBody>
-            {bibleStudies.map((study) => (
-              <TableRow key={study.id}>
-                <TableCell>
-                  {language === "en" ? study.title : study.title_cn}
-                </TableCell>
-                <TableCell>
-                  {language === "en" ? study.passage : study.passage_cn}
-                </TableCell>
-                <TableCell>
-                  {study.date} {study.time}
-                </TableCell>
-                <TableCell>
-                  {language === "en" ? study.location : study.location_cn}
-                </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end gap-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => {
-                        setSelectedBibleStudy(study)
-                        setIsEditDialogOpen(true)
-                      }}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDeleteBibleStudy(study.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+          ))}
+        </TableBody>
+      </Table>
 
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>
               {language === "en" ? "Edit Bible Study" : "编辑查经"}
             </DialogTitle>
-            <DialogDescription>
-              {language === "en"
-                ? "Edit the bible study details"
-                : "编辑查经详情"}
-            </DialogDescription>
           </DialogHeader>
-          {selectedBibleStudy && (
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="edit-title">
-                  {language === "en" ? "Title (English)" : "标题（英文）"}
-                </Label>
-                <Input
-                  id="edit-title"
-                  value={selectedBibleStudy.title}
-                  onChange={(e) =>
-                    setSelectedBibleStudy({
-                      ...selectedBibleStudy,
-                      title: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-title_cn">
-                  {language === "en" ? "Title (Chinese)" : "标题（中文）"}
-                </Label>
-                <Input
-                  id="edit-title_cn"
-                  value={selectedBibleStudy.title_cn}
-                  onChange={(e) =>
-                    setSelectedBibleStudy({
-                      ...selectedBibleStudy,
-                      title_cn: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-description">
-                  {language === "en" ? "Description (English)" : "描述（英文）"}
-                </Label>
-                <Textarea
-                  id="edit-description"
-                  value={selectedBibleStudy.description}
-                  onChange={(e) =>
-                    setSelectedBibleStudy({
-                      ...selectedBibleStudy,
-                      description: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-description_cn">
-                  {language === "en" ? "Description (Chinese)" : "描述（中文）"}
-                </Label>
-                <Textarea
-                  id="edit-description_cn"
-                  value={selectedBibleStudy.description_cn}
-                  onChange={(e) =>
-                    setSelectedBibleStudy({
-                      ...selectedBibleStudy,
-                      description_cn: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-passage">
-                  {language === "en" ? "Bible Passage (English)" : "经文（英文）"}
-                </Label>
-                <Input
-                  id="edit-passage"
-                  value={selectedBibleStudy.passage}
-                  onChange={(e) =>
-                    setSelectedBibleStudy({
-                      ...selectedBibleStudy,
-                      passage: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-passage_cn">
-                  {language === "en" ? "Bible Passage (Chinese)" : "经文（中文）"}
-                </Label>
-                <Input
-                  id="edit-passage_cn"
-                  value={selectedBibleStudy.passage_cn}
-                  onChange={(e) =>
-                    setSelectedBibleStudy({
-                      ...selectedBibleStudy,
-                      passage_cn: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-date">
-                  {language === "en" ? "Date" : "日期"}
-                </Label>
-                <Input
-                  id="edit-date"
-                  type="date"
-                  value={selectedBibleStudy.date}
-                  onChange={(e) =>
-                    setSelectedBibleStudy({
-                      ...selectedBibleStudy,
-                      date: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-time">
-                  {language === "en" ? "Time" : "时间"}
-                </Label>
-                <Input
-                  id="edit-time"
-                  type="time"
-                  value={selectedBibleStudy.time}
-                  onChange={(e) =>
-                    setSelectedBibleStudy({
-                      ...selectedBibleStudy,
-                      time: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-location">
-                  {language === "en" ? "Location (English)" : "地点（英文）"}
-                </Label>
-                <Input
-                  id="edit-location"
-                  value={selectedBibleStudy.location}
-                  onChange={(e) =>
-                    setSelectedBibleStudy({
-                      ...selectedBibleStudy,
-                      location: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-location_cn">
-                  {language === "en" ? "Location (Chinese)" : "地点（中文）"}
-                </Label>
-                <Input
-                  id="edit-location_cn"
-                  value={selectedBibleStudy.location_cn}
-                  onChange={(e) =>
-                    setSelectedBibleStudy({
-                      ...selectedBibleStudy,
-                      location_cn: e.target.value,
-                    })
-                  }
-                />
-              </div>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="edit-title">
+                {language === "en" ? "Title" : "标题"}
+              </Label>
+              <Input
+                id="edit-title"
+                value={formData.title}
+                onChange={(e) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
+              />
             </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
-              {language === "en" ? "Cancel" : "取消"}
-            </Button>
-            <Button onClick={handleEditBibleStudy}>
+            <div>
+              <Label htmlFor="edit-date">
+                {language === "en" ? "Date" : "日期"}
+              </Label>
+              <Input
+                id="edit-date"
+                type="date"
+                value={formData.date}
+                onChange={(e) =>
+                  setFormData({ ...formData, date: e.target.value })
+                }
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-content">
+                {language === "en" ? "Content" : "内容"}
+              </Label>
+              <Textarea
+                id="edit-content"
+                value={formData.content}
+                onChange={(e) =>
+                  setFormData({ ...formData, content: e.target.value })
+                }
+                className="min-h-[200px]"
+              />
+            </div>
+            <Button onClick={handleEdit} className="w-full">
               {language === "en" ? "Save Changes" : "保存更改"}
             </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

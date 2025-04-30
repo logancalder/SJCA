@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Menu, X, ChevronDown, User } from "lucide-react"
+import { Menu, X, ChevronDown, Instagram, Youtube } from "lucide-react"
 import LanguageToggle from "@/components/language-toggle"
 
 interface MainNavProps {
@@ -18,7 +18,7 @@ export default function MainNav({ language, toggleLanguage, currentPage }: MainN
 
   const mainNavItems = [
     { en: "ABOUT", zh: "关于我们", dropdown: true },
-    { en: "WATCH LIVE", zh: "在线观看" },
+    { en: "WATCH LIVE", zh: "在线观看", isExternal: true, href: "https://www.youtube.com/@SanJoseChristianAssembly" },
     { en: "BIBLE STUDY", zh: "查经" },
     { en: "YOUTH", zh: "青年" },
     { en: "GIVE", zh: "奉献" },
@@ -27,6 +27,7 @@ export default function MainNav({ language, toggleLanguage, currentPage }: MainN
   const aboutDropdownItems = [
     { en: "VALUES", zh: "使命" },
     { en: "CONNECT", zh: "联系" },
+    { en: "STAFF", zh: "牧师" },
     { en: "HISTORY", zh: "历史" },
   ]
 
@@ -35,7 +36,8 @@ export default function MainNav({ language, toggleLanguage, currentPage }: MainN
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center">
           <div className="w-1/4">
-            <Link href="/" className="font-bold text-2xl">
+            <Link href="/" className="font-bold text-2xl flex items-center">
+              <img src="/SJCA_LOGO.png" alt="SJCA Logo" className="h-10 w-auto" />
               SJCA
             </Link>
           </div>
@@ -65,10 +67,12 @@ export default function MainNav({ language, toggleLanguage, currentPage }: MainN
                   </div>
                 ) : (
                   <Link
-                    href={`/${item.en.toLowerCase().replace(/\s+/g, "-")}`}
+                    href={item.isExternal ? item.href : `/${item.en.toLowerCase().replace(/\s+/g, "-")}`}
                     className={`text-sm font-medium hover:underline underline-offset-8 decoration-2 ${
                       currentPage === item.en ? "underline" : ""
                     }`}
+                    target={item.isExternal ? "_blank" : undefined}
+                    rel={item.isExternal ? "noopener noreferrer" : undefined}
                   >
                     {language === "en" ? item.en : item.zh}
                   </Link>
@@ -78,12 +82,13 @@ export default function MainNav({ language, toggleLanguage, currentPage }: MainN
           </div>
 
           <div className="w-1/4 flex items-center justify-end space-x-4">
-            <LanguageToggle language={language} toggleLanguage={toggleLanguage} />
-            <Link href="/profile">
-              <Button variant="outline" size="icon" className="rounded-none border-2">
-                <User className="h-4 w-4" />
-              </Button>
+            <Link href="https://www.instagram.com/sjcachurch" target="_blank" rel="noopener noreferrer">
+              <Instagram className="h-6 w-6 hover:text-gray-600 stroke-[1.2]" />
             </Link>
+            <Link href="https://www.youtube.com/@SanJoseChristianAssembly" target="_blank" rel="noopener noreferrer">
+              <Youtube className="h-7 w-7 hover:text-gray-600 stroke-[1.1]" />
+            </Link>
+            <LanguageToggle language={language} toggleLanguage={toggleLanguage} />
 
             <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileMenuOpen(true)}>
               <Menu className="h-6 w-6" />
@@ -97,7 +102,8 @@ export default function MainNav({ language, toggleLanguage, currentPage }: MainN
         <div className="fixed inset-0 z-50 bg-white lg:hidden">
           <div className="container mx-auto px-4 py-4 flex flex-col h-full">
             <div className="flex items-center justify-between mb-8">
-              <Link href="/" className="font-bold text-2xl">
+              <Link href="/" className="font-bold text-2xl flex items-center gap-2">
+                <img src="/SJCA_LOGO.png" alt="SJCA Logo" className="h-8 w-auto" />
                 SJCA
               </Link>
               <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(false)}>
@@ -137,9 +143,11 @@ export default function MainNav({ language, toggleLanguage, currentPage }: MainN
                     </>
                   ) : (
                     <Link
-                      href={`/${item.en.toLowerCase().replace(/\s+/g, "-")}`}
+                      href={item.isExternal ? item.href : `/${item.en.toLowerCase().replace(/\s+/g, "-")}`}
                       className="text-lg font-medium"
                       onClick={() => setMobileMenuOpen(false)}
+                      target={item.isExternal ? "_blank" : undefined}
+                      rel={item.isExternal ? "noopener noreferrer" : undefined}
                     >
                       {language === "en" ? item.en : item.zh}
                     </Link>

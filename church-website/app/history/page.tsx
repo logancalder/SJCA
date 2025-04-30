@@ -164,8 +164,8 @@ export default function HistoryPage() {
         {/* Hero Section */}
         <ParallaxHero
           type="image"
-          src="/history-hero.jpg"
-          overlayOpacity={60}
+          src="/easter_25/DSC_0592.jpg"
+          initialOffset={0}
         >
           <h1 className="font-bold text-4xl md:text-6xl mb-4">
             {language === "en" ? "OUR HISTORY" : "我们的历史"}

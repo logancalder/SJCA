@@ -6,6 +6,7 @@ import MainNav from "@/app/components/main-nav"
 import MainFooter from "@/app/components/main-footer"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import ParallaxHero from "@/components/parallax-hero"
 
 export default function YouthPage() {
   const [language, setLanguage] = useState<"en" | "zh">("en")
@@ -28,16 +29,12 @@ export default function YouthPage() {
 
       <main className="flex-1 pt-14">
         {/* Hero Section */}
-        <section className="relative h-[60vh] overflow-hidden">
-          <div className="absolute inset-0">
-            <img
-              src="/youth-hero.jpg"
-              alt="Youth Ministry"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-              <div className="text-center text-white">
-                <h1 className="font-bold text-4xl md:text-6xl mb-4">
+        <ParallaxHero
+          type="image"
+          src="/easter_25/DSC_0792.jpg"
+          initialOffset={-30}
+        >
+          <h1 className="font-bold text-4xl md:text-6xl mb-4">
                   {language === "en" ? "YOUTH MINISTRY" : "青年事工"}
                 </h1>
                 <p className="text-xl max-w-2xl mx-auto">
@@ -45,10 +42,7 @@ export default function YouthPage() {
                     ? "Growing together in faith and fellowship"
                     : "在信仰和团契中一起成长"}
                 </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        </ParallaxHero>
 
         {/* KFC - Kids for Christ (Right Image) */}
         <section className="py-16">
@@ -76,7 +70,7 @@ export default function YouthPage() {
               </div>
               <div className="aspect-4/3">
                 <img
-                  src="/DSC_0792.jpg"
+                  src="/easter_25/!bubbles.jpg"
                   alt="Kids for Christ"
                   className="w-full h-full object-cover"
                 />

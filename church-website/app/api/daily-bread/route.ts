@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js"
 import { NextResponse } from "next/server"
+import { getCachedVerse, setCachedVerse } from '../../utils/verse-cache'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -176,10 +177,14 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const date = searchParams.get('date')
 
-    console.log("Requested date:", date)
-
     if (!date) {
       return NextResponse.json({ error: 'Date parameter is required' }, { status: 400 })
+    }
+
+    // Check cache first
+    const cachedData = getCachedVerse(date);
+    if (cachedData) {
+      return NextResponse.json(cachedData);
     }
 
     const { data, error } = await supabase
@@ -192,8 +197,6 @@ export async function GET(request: Request) {
       console.error('Error fetching daily bread:', error)
       return NextResponse.json({ error: 'Failed to fetch daily bread' }, { status: 500 })
     }
-
-    console.log("Fetched data:", data)
     
     if (!data) {
       // Fetch default verse content from Bible API
@@ -245,23 +248,32 @@ export async function GET(request: Request) {
       const content = await fetchVerseContent(data.verse);
       const contentZh = await fetchVerseContent(data.verse, true);
 
-      
-      return NextResponse.json({
+      const responseData = {
         ...data,
         content: content?.text || data.content,
         verse_zh: translateReference(data.verse),
         content_zh: contentZh?.text || data.content_zh,
         verses: content?.verses || [],
         verses_zh: contentZh?.verses || []
-      });
+      };
+
+      // Cache the response
+      setCachedVerse(date, responseData);
+
+      return NextResponse.json(responseData);
     }
 
     // Return the data with verses array
-    return NextResponse.json({
+    const responseData = {
       ...data,
       verses: [],
       verses_zh: []
-    });
+    };
+
+    // Cache the response
+    setCachedVerse(date, responseData);
+
+    return NextResponse.json(responseData);
   } catch (error) {
     console.error('Error in daily bread route:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

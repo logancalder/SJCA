@@ -58,7 +58,7 @@ export default function MainFooter({ language }: MainFooterProps) {
                   </svg>
                 </Button>
               </Link>
-              <Link href="https://www.instagram.com/sanjosechristianassembly" target="_blank" rel="noopener noreferrer">
+              <Link href="https://www.instagram.com/sjcachurch" target="_blank" rel="noopener noreferrer">
                 <Button variant="outline" size="icon" className="rounded-none border-2 bg-transparent">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
