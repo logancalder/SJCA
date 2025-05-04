@@ -29,7 +29,7 @@ export default function MainFooter({ language }: MainFooterProps) {
               {language === "en" ? "Sunday Worship: 9:30 AM" : "周日：上午9:30"}
             </p>
             <p className="text-gray-400">
-              {language === "en" ? "Friday Bible Study: 7:30 PM" : "周三查经：晚上7:30"}
+              {language === "en" ? "Friday Bible Study: 8:00 PM" : "周三查经：晚上7:30"}
             </p>
             <p className="text-gray-400">
               {language === "en" ? "Saturday Prayer Meeting: 10:15 AM" : "周三查经：晚上10:15"}
