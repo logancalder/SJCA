@@ -7,7 +7,10 @@ import "./globals.css"
 export const metadata: Metadata = {
   title: "San Jose Christian Assembly",
   description: "Growing together in faith, hope, and love",
-    generator: 'v0.dev'
+  generator: 'v0.dev',
+  icons: {
+    icon: '/logo.png',
+  }
 }
 
 export default function RootLayout({
