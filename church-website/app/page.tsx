@@ -18,6 +18,9 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [showBanner, setShowBanner] = useState(true)
   const [verseData, setVerseData] = useState<DailyBreadData | null>(null)
+  const [bibleStudy, setBibleStudy] = useState<BibleStudy | null>(null)
+  const [isBibleStudyLoading, setIsBibleStudyLoading] = useState(false)
+
   interface DailyBreadData {
     verse: string;
     verse_zh: string;
@@ -36,6 +39,12 @@ export default function Home() {
     text: string;
   }
 
+  interface BibleStudy {
+    date: string;
+    verse: string;
+    description: string;
+    description_cn: string;
+  }
 
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast()
@@ -67,6 +76,28 @@ export default function Home() {
 
     fetchVerseData()
   }, [date])
+
+  useEffect(() => {
+    const fetchBibleStudy = async () => {
+      try {
+        setIsBibleStudyLoading(true)
+        const response = await fetch('/api/bible-studies')
+        if (!response.ok) {
+          throw new Error('Failed to fetch bible study data')
+        }
+        const data = await response.json()
+        if (data && data.length > 0) {
+          setBibleStudy(data[0])
+        }
+      } catch (err) {
+        console.error('Error fetching bible study:', err)
+      } finally {
+        setIsBibleStudyLoading(false)
+      }
+    }
+
+    fetchBibleStudy()
+  }, [])
 
   
   const toggleLanguage = () => {
@@ -489,19 +520,34 @@ export default function Home() {
               <EventsCalendar language={language} />
 
               {/* Bible Study card */}
-              {/* TODO: This needs to be updated from DB */}
-              <div className="bg-white border-2 border-black p-6 flex flex-col h-full">
+              <div className="bg-white border-2 border-black p-6 flex flex-col">
                 <h2 className="font-bold text-xl mb-4">{language === "en" ? "Bible Study" : "查经"}</h2>
-                <p className="text-muted-foreground mb-6">
-                  {language === "en"
-                    ? "Join us this Friday night at 7:30 PM for a Bible study on 1 Timothy 6:3-21. This week we will be discussing the importance of contentment and how it relates to our faith."
-                    : "本周学习的经文：提摩太前书 6:3-21。加入我们，一起探讨这段经文的教导和见解。"}
-                </p>
-                <div className="mt-auto">
-                  <Link href="/bible-study">
-                    <Button className="w-full rounded-none">{language === "en" ? "Join Bible Study" : "参加查经"}</Button>
-                  </Link>
-                </div>
+                {isBibleStudyLoading ? (
+                  <div className="animate-pulse space-y-4">
+                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                  </div>
+                ) : bibleStudy ? (
+                  <>
+                    <p className="text-muted-foreground">
+                      {language === "en"
+                        ? bibleStudy.description
+                        : bibleStudy.description_cn}
+                    </p>
+                    <div className="mt-4">
+                      <p className="font-medium">{bibleStudy.verse}</p>
+                      <p className="text-sm text-gray-500 mt-1">
+                        {language === "en" ? "Friday at 8:00 PM" : "每周五晚上8:00"}
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <p className="text-muted-foreground">
+                    {language === "en" 
+                      ? "No current bible study available" 
+                      : "暂无查经信息"}
+                  </p>
+                )}
               </div>
             </div>
           </div>

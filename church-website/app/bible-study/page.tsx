@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import MainNav from "@/app/components/main-nav"
 import MainFooter from "@/app/components/main-footer"
@@ -8,8 +8,48 @@ import { Button } from "@/components/ui/button"
 import { BookOpen, Clock, MapPin } from "lucide-react"
 import ParallaxHero from "@/components/parallax-hero"
 
+interface BibleStudy {
+  date: string;
+  verse: string;
+  description: string;
+  description_cn: string;
+}
+
 export default function BibleStudyPage() {
   const [language, setLanguage] = useState<"en" | "zh">("en")
+  const [bibleStudy, setBibleStudy] = useState<BibleStudy | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchBibleStudy = async () => {
+      try {
+        console.log('Fetching bible study data...');
+        const response = await fetch('/api/bible-studies');
+        const data = await response.json();
+        
+        if (!response.ok) {
+          console.error('API Error:', data);
+          throw new Error(data.error || 'Failed to fetch bible study data');
+        }
+        
+        console.log('API Response:', data);
+        
+        if (data && data.length > 0) {
+          setBibleStudy(data[0]);
+        } else {
+          console.log('No bible study data available for current week');
+        }
+      } catch (err) {
+        console.error('Fetch Error:', err);
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBibleStudy();
+  }, []);
 
   const toggleLanguage = () => {
     setLanguage(language === "en" ? "zh" : "en")
@@ -31,63 +71,81 @@ export default function BibleStudyPage() {
         {/* Hero Section */}
         <ParallaxHero
           type="image"
-          src="/easter_25/DSC_0656.jpg"
+          src="/bible-study-banner.jpg"
           initialOffset={0}
         >
           <h1 className="font-bold text-4xl md:text-6xl mb-4">
-                  {language === "en" ? "BIBLE STUDY" : "查经"}
-                </h1>
-                <p className="text-xl max-w-2xl mx-auto">
-                  {language === "en" 
-                    ? "Dive deeper into God's Word together"
-                    : "一起深入研读神的话语"}
-                </p>
+            {language === "en" ? "BIBLE STUDY" : "查经"}
+          </h1>
+          <p className="text-xl max-w-2xl mx-auto">
+            {language === "en" 
+              ? "Dive deeper into God's Word together"
+              : "一起深入研读神的话语"}
+          </p>
         </ParallaxHero>
 
         {/* Current Study Section */}
-        <section className="py-16">
+        <section className="py-16 bg-background">
           <div className="container mx-auto px-4">
             <motion.div
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              // variants={fadeInVariants}
               transition={{ duration: 0.6 }}
-              className="max-w-4xl mx-auto"
+              className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8"
             >
-              <div className="grid md:grid-cols-2 gap-8 items-center">
-                <div>
-                  <h2 className="text-3xl font-bold mb-6">
-                    {language === "en" ? "Current Study" : "当前学习"}
-                  </h2>
-                  <p className="text-xl mb-6">
-                    {language === "en"
-                      ? "Join us as we study the Book of Romans, exploring the foundations of our faith and the transformative power of the Gospel."
-                      : "加入我们学习罗马书，探索我们信仰的基础和福音的转化力量。"}
-                  </p>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <Clock className="h-5 w-5" />
-                      <span>{language === "en" ? "Every Friday at 7:30 PM" : "每周五晚上7:30"}</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <MapPin className="h-5 w-5" />
-                      <span>215 Topaz St, Milpitas, CA 95035</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <BookOpen className="h-5 w-5" />
-                      <span>{language === "en" ? "Current Chapter: Romans 8" : "当前章节：罗马书第8章"}</span>
+              {loading ? (
+                <div className="text-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+                  <p className="text-lg text-gray-600">Loading bible study...</p>
+                </div>
+              ) : error ? (
+                <div className="text-center py-12">
+                  <p className="text-red-500 text-lg">{error}</p>
+                </div>
+              ) : bibleStudy ? (
+                <div className="grid md:grid-cols-2 gap-12 items-center">
+                  <div className="space-y-6">
+                    <h2 className="text-3xl font-bold text-gray-900">
+                      {language === "en" ? "Current Study" : "当前学习"}
+                    </h2>
+                    <p className="text-xl text-gray-700 leading-relaxed">
+                      {language === "en"
+                        ? bibleStudy.description
+                        : bibleStudy.description_cn}
+                    </p>
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3 text-gray-700">
+                        <Clock className="h-5 w-5 text-primary" />
+                        <span>{language === "en" ? "Friday at 8:00 PM" : "每周五晚上7:30"}</span>
+                      </div>
+                      <div className="flex items-center gap-3 text-gray-700">
+                        <MapPin className="h-5 w-5 text-primary" />
+                        <span>215 Topaz St, Milpitas, CA 95035</span>
+                      </div>
+                      <div className="flex items-center gap-3 text-gray-700">
+                        <BookOpen className="h-5 w-5 text-primary" />
+                        <span className="font-medium">{bibleStudy.verse}</span>
+                      </div>
                     </div>
                   </div>
+                  <div className="aspect-square rounded-lg overflow-hidden shadow-md">
+                    <img
+                      src="https://svnfvvimrctyszdksuak.supabase.co/storage/v1/object/public/biblestudies//judges.png"
+                      alt="Current Bible Study"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                 </div>
-                <div className="aspect-square">
-                  <img
-                    src="/bible-study-current.jpg"
-                    alt="Current Bible Study"
-                    className="w-full h-full object-cover"
-                  />
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-gray-600 text-lg">
+                    {language === "en" 
+                      ? "No current bible study available" 
+                      : "暂无查经信息"}
+                  </p>
                 </div>
-              </div>
+              )}
             </motion.div>
           </div>
         </section>
